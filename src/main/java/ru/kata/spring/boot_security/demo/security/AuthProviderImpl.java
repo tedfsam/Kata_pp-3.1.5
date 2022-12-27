@@ -1,0 +1,47 @@
+package ru.kata.spring.boot_security.demo.security;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
+import ru.kata.spring.boot_security.demo.services.UserService;
+
+import java.util.Collections;
+
+@Component
+public class AuthProviderImpl implements AuthenticationProvider {
+
+    private final UserService userService;
+
+    @Autowired
+    public AuthProviderImpl(UserService userService) {
+        this.userService = userService;
+    }
+
+
+    @Override
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+
+        String username = authentication.getName();
+
+        UserDetails userDetailsImpl = userService.loadUserByUsername(username);
+
+        String password = authentication.getCredentials().toString();
+
+        if (!password.equals(userDetailsImpl.getPassword()))
+            throw new BadCredentialsException("Incorrect password");
+
+        return new UsernamePasswordAuthenticationToken(userDetailsImpl, password,
+                Collections.emptyList());
+
+    }
+
+    @Override
+    public boolean supports(Class<?> authentication) {
+        return true;
+    }
+}
