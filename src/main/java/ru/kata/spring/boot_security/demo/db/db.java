@@ -36,14 +36,13 @@ public class db {
         userSet.add(roleUser);
 
         User admin = new User("admin", "admin",
-                "Stepan", "Razin", 35,
-                "st.razin@mail.ru", adminSet);
+                "Messi", "Leonel", 35,
+                "u1@e1.ru", adminSet);
         admin.setId(1L);
 
         User user = new User("user", "user",
-                "Emelyan", "Pugachev", 33,
-                "em.pugachev@mail.ru", userSet);
-
+                "Anhel", "DiMaria", 33,
+                "u2@e1.ru", userSet);
         user.setId(2L);
 
 //        roleAdmin.setUsers(new HashSet<>(Collections.singleton(admin)));

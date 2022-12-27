@@ -28,14 +28,16 @@ public class User implements UserDetails {
     @Transient
     private String confirmPassword;
 
-    @Column(name = "first_name")
+    @Column(name = "firstname")
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column(name = "lastname")
     private String lastName;
 
     @Column(name = "age")
-    private @Min(value = 0, message = "Возраст должен быть положительным числом") @Max(value = 150, message = "Что-то не верится") Integer age;
+    @Min(value = 0, message = "Возраст должен быть положительным числом")
+    @Max(value = 150, message = "Что-то не верится")
+    private Integer age;
 
     @Email(message = "Поле должно иметь формат электронной почты")
     @Column(name = "email")
@@ -157,4 +159,5 @@ public class User implements UserDetails {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
-    }}
+    }
+}
