@@ -15,10 +15,9 @@
 <p>Last name: <span th:text = "${user.lastName}"></span></p>
 <p>Age: <span th:text = "${user.age}"></span></p>
 <p>Email: <span th:text = "${user.email}"></span></p>
-<!--<p>Roles: <span th:text = "${user.roles}"></span></p>-->
 <p>Roles: <p th:each ="role : ${user.getRoles()}" th:text=" ${role.name}"></p></p>
 
-<br>
+
 <br>
 <form th:action="@{/logout}" th:method="POST">
     <input type="submit" value="Logout">

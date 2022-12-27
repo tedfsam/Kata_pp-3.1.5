@@ -16,13 +16,13 @@ public class User implements UserDetails {
     @Column(name = "id")
     private Long id;
 
-    @NotEmpty(message = "Имя пользователя не должно быть пустым")
-    @Size(min = 2, max = 255, message = "Имя должно быть от 2 до 255 символов длиной")
+    @NotEmpty(message = "Not null")
+    @Size(min = 2, max = 255, message = "From 2 to 25 symbols")
     @Column(name = "username")
     private String username;
 
     @Column(name = "password")
-    @Size(min = 2, message = "Пароль должен быть не менее 2 знаков")
+    @Size(min = 2, message = "Above 2 symbols")
     private String password;
 
     @Transient
@@ -35,11 +35,11 @@ public class User implements UserDetails {
     private String lastName;
 
     @Column(name = "age")
-    @Min(value = 0, message = "Возраст должен быть положительным числом")
-    @Max(value = 150, message = "Что-то не верится")
+    @Min(value = 0, message = "Above zero")
+    @Max(value = 127, message = "Check age")
     private Integer age;
 
-    @Email(message = "Поле должно иметь формат электронной почты")
+    @Email(message = "Email format")
     @Column(name = "email")
     private String email;
 
@@ -47,13 +47,13 @@ public class User implements UserDetails {
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "roles_id"))
-
     private Set<Role> roles;
 
     public User() {
     }
 
-    public User(String username, String password, String firstName, String lastName, int age, String email, Set<Role> roles) {
+    public User(String username, String password, String firstName,
+                String lastName, int age, String email, Set<Role> roles) {
         this.username = username;
         this.password = password;
 
@@ -88,11 +88,11 @@ public class User implements UserDetails {
         this.lastName = lastName;
     }
 
-    public @Min(value = 0, message = "Возраст должен быть положительным числом") @Max(value = 150, message = "Что-то не верится") Integer getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(@Min(value = 0, message = "Возраст должен быть положительным числом") @Max(value = 150, message = "Что-то не верится") Integer age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 

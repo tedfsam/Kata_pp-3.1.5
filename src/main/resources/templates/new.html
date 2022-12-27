@@ -2,10 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:form="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
-    <title>Add new user</title>
+    <title>Add user</title>
 </head>
 <body>
-<h2>Add new user</h2>
+<h2>Add user</h2>
 <br>
 <form th:method="POST" th:action="@{/saveUser}" th:object="${user}">
 
@@ -44,10 +44,6 @@
     <br><br>
 
     <label for="roles"> Roles </label>
-    <!--<select multiple name="roles" id="roles">-->
-    <!--    <option th:each="role : ${roles}" th:value="${role.getId()}" th:text="${role.getName()}"/>-->
-    <!--</select>-->
-    <!--    <br><br>-->
 
     <br><br>
     <p><input type="checkbox" name="roles" id="roles"
