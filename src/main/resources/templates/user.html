@@ -1,26 +1,109 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
-    <title>Spring Security Example</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title th:text="${user.getUsername()}">Value</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <style>
+
+    </style>
 </head>
+
 <body>
-<h1>User, welcome at spring boot security page!</h1>
-<br>
-<h2>User info</h2>
 
-<p>Username: <span th:text = "${user.username}"></span></p>
-<p>Password: <span th:text = "${user.password}"></span></p>
-<p>First name: <span th:text = "${user.firstName}"></span></p>
-<p>Last name: <span th:text = "${user.lastName}"></span></p>
-<p>Age: <span th:text = "${user.age}"></span></p>
-<p>Email: <span th:text = "${user.email}"></span></p>
-<p>Roles: <p th:each ="role : ${user.getRoles()}" th:text=" ${role.name}"></p></p>
+<!--Head-->
 
+<header>
+    <div class="container-fluid m-0 p-0">
+        <div class="row bg-dark bg-gradient m-0 p-3">
+            <div class="col-11 d-inline">
+                <span class="text-white h5">
+                    <th:block class="font-weight-normal"
+                              th:text="${user.getUsername()} + ' with roles: '+ ${user.getRoles()}">
+                        text
+                    </th:block>
+                </span>
+            </div>
+            <div class="col-1 text-white h4">
+                <form th:action="@{/logout}" method="post">
+                    <input class="btn btn-link" type="submit" value="Logout"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</header>
 
-<br>
-<form th:action="@{/logout}" th:method="POST">
-    <input type="submit" value="Logout">
-</form>
+<!--Left-->
+
+<div class="container-fluid">
+
+    <div class="row m-0 p-0">
+        <div class="col-md-2 p-0 m-0 align-top">
+            <div class="bg-white vh-100 m-0 p-0 w-100">
+                <ul class="nav nav-pills fs-5 w-100">
+                    <li class="nav-item w-100">
+                        <a class="nav-link w-100 active mt-3" th:href="@{/user}">User</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!--Table-->
+
+        <div class="col-md-10 p-3 bg-light m-0 p-0">
+            <div class="h1">User infomation-page</div>
+            <div class="border h5 pl-3 pt-2 pb-2 m-0 p-3">About user</div>
+
+            <div class="bg-white border p-3 ">
+
+                <table class="table table-striped border-top table-responsive-md text-left">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Age</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td th:text="${user.getId()}">id</td>
+                        <td th:text="${user.getUsername()}">id</td>
+                        <td th:text="${user.getFirstName()}">id</td>
+                        <td th:text="${user.getLastName()}">id</td>
+                        <td th:text="${user.getAge()}">id</td>
+                        <td th:text="${user.getEmail()}">id</td>
+                        <td>
+                                <span th:each="role : ${user.getRoles()}">
+                                    <span th:text="${role}"></span>
+                                </span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
 </body>
 </html>
