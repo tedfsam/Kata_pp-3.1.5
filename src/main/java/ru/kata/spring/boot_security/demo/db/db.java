@@ -2,10 +2,10 @@
 //
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.stereotype.Component;
-//import ru.kata.spring.boot_security.demo.models.Role;
-//import ru.kata.spring.boot_security.demo.models.User;
-//import ru.kata.spring.boot_security.demo.services.RoleService;
-//import ru.kata.spring.boot_security.demo.services.UserService;
+//import ru.kata.spring.boot_security.demo.model.Role;
+//import ru.kata.spring.boot_security.demo.model.User;
+//import ru.kata.spring.boot_security.demo.service.RoleService;
+//import ru.kata.spring.boot_security.demo.service.UserService;
 //
 //import javax.annotation.PostConstruct;
 //import java.util.HashSet;
@@ -20,7 +20,6 @@
 //        this.userService = userService;
 //        this.roleService = roleService;
 //    }
-//
 //
 //    @PostConstruct
 //    public void initDB() {
@@ -46,11 +45,23 @@
 //                "u2@e1.ru", userSet);
 //        user.setId(2L);
 //
+//        User user1 = new User("user1", "user",
+//                "Antuan", "Grizmann", 28,
+//                "u23@e1.ru", userSet);
+//        user.setId(2L);
+//
+//        User user2 = new User("user2", "user",
+//                "Vinni", "Junior", 21,
+//                "u22@e1.ru", userSet);
+//        user.setId(2L);
+//
 ////        roleAdmin.setUsers(new HashSet<>(Collections.singleton(admin)));
 ////        roleUser.setUsers(new HashSet<>(List.of(admin, user)));
 //
 //        userService.saveUser(admin);
 //        userService.saveUser(user);
+//        userService.saveUser(user1);
+//        userService.saveUser(user2);
 //
 //    }
 //}

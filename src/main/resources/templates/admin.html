@@ -120,7 +120,7 @@
                                         </div>
 
                                         <form th:method="PATCH"
-                                              th:action="@{/admin/{id} (id=${user.getId()})}"
+                                              th:action="@{/admin/editUser/{id} (id=${user.getId()})}"
                                               th:object="${user}">
                                             <div class="modal-body col-md text-center">
 
@@ -181,8 +181,7 @@
                                                         <label><strong> Role </strong></label>
                                                         <select multiple class="form-control form-control-sm" id="roles"
                                                                 name="roles" size="2" required>
-                                                            <option th:each="role: ${user.getRoles()}"
-                                                                    th:value="${role.getId()}">
+                                                            <option th:each="role: ${roles}" th:value="${role.getId()}">
                                                                 <th:block th:text="${role.getName()}">
                                                                 </th:block>
                                                             </option>
@@ -228,7 +227,7 @@
                                         </div>
 
                                         <form class="text-center" th:method="DELETE"
-                                              th:action="@{/admin/{id}(id=${user.getId()})}"
+                                              th:action="@{/admin/deleteUser/{id}(id=${user.getId()})}"
                                               th:object="${user}">
                                             <div class="modal-body col-md text-center">
                                                 <br>
