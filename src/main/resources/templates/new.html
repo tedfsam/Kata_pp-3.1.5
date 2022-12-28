@@ -3,57 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <title>Add user</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
-<h2>Add user</h2>
-<br>
-<form th:method="POST" th:action="@{/saveUser}" th:object="${user}">
+<!-- ##################### Шапка ##################### -->
 
-    <label for="username"> Username </label>
-    <input type="text" th:field="*{username}" id="username">
-    <div style="color: red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username error</div>
-    <div style="color: red" th:text="${usernameError}"/>
-    <br><br>
+<header>
+    <div class="container-fluid m-0 p-0">
+        <div class="row bg-dark bg-gradient m-0 p-3">
+            <div class="col-11 d-inline">
+                <span class="text-white h5">
+                    <th:block class="font-weight-normal"
+                              th:text="${user.getUsername()} + ' with roles: '+ ${user.getRoles()}">
+                        text
+                    </th:block>
+                </span>
+            </div>
+            <div class="col-1 text-white h4">
+                <form th:action="@{/logout}" method="post">
+                    <input class="btn btn-link" type="submit" value="Logout"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</header>
 
-    <label for="password"> Password </label>
-    <input type="password" th:field="*{password}" id="password">
-    <div style="color: red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</div>
-    <br><br>
+<div class="container-fluid">
+    <div class="row m-0 p-0">
+        <!-- ##################### Боковая левая панель ##################### -->
+        <div class="col-md-2 p-0 m-0 align-top">
+            <div class="bg-white vh-100 m-0 p-0 w-100">
+                <ul class="nav nav-pills fs-5 w-100">
+                    <li class="nav-item w-100">
+                        <a class="nav-link active mt-3 w-100" th:href="@{/admin}">Admin</a>
+                    </li>
+                    <li class="nav-item w-100">
+                        <a class="nav-link w-100" th:href="@{/user}">User</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
-    <label for="confirm_password"> Confirm Password </label>
-    <input type="password" th:field="*{confirmPassword}" id="confirm_password">
-    <div style="color: red" th:text="${passwordError}"/>
-    <br><br>
+        <!-- ##################### Основная панель ##################### -->
+        <div class="col-md-10 p-3 bg-light m-0 p-0">
+            <div class="h1">Admin panel</div>
 
-    <label for="firstName"> First Name </label>
-    <input type="text" th:field="*{firstName}" id="firstName">
-    <br><br>
+            <!-- ##################### Вкладки ##################### -->
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="/admin">Users table</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/addNewUser">New User</a>
+                </li>
+            </ul>
 
-    <label for="lastName"> Last Name </label>
-    <input type="text" th:field="*{lastName}" id="lastName">
-    <br><br>
+            <div class="card">
+                <div class="card-header">
+                    <h4>Add new user</h4>
+                </div>
+                <!-- ##################### Новый пользователь ##################### -->
+                <div class="card-body">
+                    <form class="text-center" role="form" th:method="POST" th:action="@{/saveUser}"
+                          th:object="${user}">
+                        <div class="form-group">
+                            <div class="row justify-content-center">
+                                <div class="col-4">
 
-    <label for="age"> Age </label>
-    <input type="text" th:field="*{age}" id="age">
-    <div style="color: red" th:if="${#fields.hasErrors('age')}" th:errors="*{age}">Age error</div>
-    <br><br>
+                                    <div class="form-group">
+                                        <label for="username"><strong> Username </strong></label>
+                                        <input type="text" name="username" class="form-control" id="username"
+                                               placeholder="Username">
+                                    </div>
+                                    <br>
 
-    <label for="email"> Email </label>
-    <input type="text" th:field="*{email}" id="email">
-    <div style="color: red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</div>
-    <br><br>
+                                    <div class="form-group">
+                                        <label for="Password"><strong> Password </strong></label>
+                                        <input type="password" name="password" class="form-control" id="Password"
+                                               placeholder="Password">
+                                    </div>
+                                    <br>
 
-    <label for="roles"> Roles </label>
+                                    <div class="form-group">
+                                        <label for="First name"><strong> First name </strong></label>
+                                        <input type="text" name="firstname" class="form-control" id="First name"
+                                               placeholder="First name">
+                                    </div>
+                                    <br>
 
-    <br><br>
-    <p><input type="checkbox" name="roles" id="roles"
-              th:each="role : ${roles}" th:value="${role.getId()}" th:text="${role.getName()}"
-              th:field="*{roles}"></p>
-    <br><br>
+                                    <div class="form-group">
+                                        <label for="Last name"><strong> Last name </strong></label>
+                                        <input type="text" name="lastname" class="form-control" id="Last name"
+                                               placeholder="Last name">
+                                    </div>
+                                    <br>
 
-    <input type="submit" value="Add new user"/>
+                                    <div class="form-group">
+                                        <label for="age"><strong> Age </strong></label>
+                                        <input type="text" name="age" class="form-control" id="age"
+                                               placeholder="Email">
+                                    </div>
 
-</form>
+                                    <div class="form-group">
+                                        <label for="email"><strong> Email </strong></label>
+                                        <input type="email" name="email" class="form-control" id="email"
+                                               placeholder="Email">
+                                    </div>
+                                    <br>
 
+                                    <div class="form-group">
+                                        <label><strong> Role </strong></label>
+                                        <select multiple class="form-control form-control-sm" id="roles"
+                                                name="roles" size="2" required>
+                                            <option th:each="role: ${user.getRoles()}" th:value="${role.getId()}">
+                                                <th:block th:text="${role.getName()}">
+                                                </th:block>
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <br>
+
+                                    <button class="btn btn-success">Add new user</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ############ Старый код ############ -->
+
+<!--
+<h1>Add User</h1>
+    <form th:action="@{/admin/save}" th:object="${newUser}" method="post">
+        <p th:text="'User id: ' + ${newUser.getId()}">ID</p>
+        <label for="username">Enter Username: </label>
+        <input type="text" th:field="*{username}" id="username" placeholder="Username"/>
+        <br/>
+        <label for="password">Enter Password: </label>
+        <input type="password" th:field="*{password}" id="password" placeholder="Password"/>
+        <br/>
+        <label for="firstname">Enter Firstname: </label>
+        <input type="text" th:field="*{firstname}" id="firstname" placeholder="Firstname"/>
+        <br/>
+        <label for="lastname">Enter Lastname: </label>
+        <input type="text" th:field="*{lastname}" id="lastname" placeholder="Lastname"/>
+        <br/>
+        <label for="email">Enter E-mail: </label>
+        <input type="text" th:field="*{email}" id="email" placeholder="E-mail"/>
+        <br/>
+        <p>
+            <label>Roles:
+                <input type="checkbox" name="roles"
+                       th:each="role : ${roles}"
+                       th:text="${role.name}"
+                       th:value="${role.id}"
+                       th:field="*{roles}"
+                />
+            </label>
+        </p>
+        <input type="submit" value="Create" />
+    </form>
+-->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
 </body>
 </html>
