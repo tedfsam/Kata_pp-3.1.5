@@ -28,6 +28,7 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     public UserServiceImpl() {
+
     }
 
     @Override
