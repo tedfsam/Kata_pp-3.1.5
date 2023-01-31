@@ -15,43 +15,34 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    private final SuccessUserHandler successUserHandler;
-    private final UserService userService;
 
     @Autowired
-    public WebSecurityConfig(SuccessUserHandler successUserHandler, UserService userService) {
-        this.successUserHandler = successUserHandler;
-        this.userService = userService;
+    UserServiceImpl userService;
+
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
-                .antMatchers("/admin/**", "/edit/**", "/new/**").hasRole("ADMIN")
-                .antMatchers("/",  "/error").permitAll()
-                .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
-                .anyRequest().hasRole("ADMIN")
-                .and()
-                .formLogin().successHandler(successUserHandler)
-                .permitAll()
-                .and()
-                .logout().logoutUrl("/logout")
-//                .permitAll()
-                .logoutSuccessUrl("/");
+        http.formLogin().loginPage("/login").successHandler(new SuccessUserHandler())
+                .loginProcessingUrl("/login")
+                .usernameParameter("username")
+                .passwordParameter("password").permitAll();
+
+        http.logout().permitAll().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl("/login?logout").and().csrf().disable();
+
+        http.authorizeRequests()
+                .antMatchers("/").authenticated()
+                .antMatchers("/login", "/registration").anonymous()
+                .antMatchers("/user").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/admin/**").hasRole("ADMIN");
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userService);
-        provider.setPasswordEncoder(passwordEncoder());
-        auth.authenticationProvider(provider);
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(12);
-//        return NoOpPasswordEncoder.getInstance();
+    @Autowired
+    protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder());
     }
 }

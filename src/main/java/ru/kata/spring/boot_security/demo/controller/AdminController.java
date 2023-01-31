@@ -1,87 +1,85 @@
 package ru.kata.spring.boot_security.demo.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.dto.UserDTO;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.validation.Valid;
+import java.util.HashSet;
 import java.util.List;
 
 @Controller
+@RequestMapping("/admin")
 public class AdminController {
 
     private final UserService userService;
-    private final RoleService roleService;
+    private  final RoleService roleService;
 
-    @Autowired
     public AdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
     }
 
-
-    @GetMapping("/admin")
-    public String showAllUsers(Model model) {
-        List<User> userList = userService.getAllUsers();
-        model.addAttribute("allUsers", userList);
-        return "admin";
+    @GetMapping
+    public String findAllUsers(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        model.addAttribute("users", userService.allUser()); //TODO
+        model.addAttribute("user", authentication.getPrincipal());
+        return "admin/admin";
     }
 
-    @GetMapping("/addNewUser")
-    public String addNewUser(Model model) {
-        User user = new User();
-        model.addAttribute("user", user);
+    @GetMapping("/add")
+    public String newUser(Model model) {
+        model.addAttribute("user", new User());
         model.addAttribute("roles", roleService.getRoles());
-        return "new";
+        return "add";
     }
 
-    @RequestMapping("/saveUser")
-    public String saveUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("user", user);
-            model.addAttribute("roles", roleService.getRoles());
-            return "new";
+    @PostMapping(value = "/edit")
+    public String editUser(@RequestParam Long id, @RequestParam String firstName,
+                           @RequestParam String lastName, @RequestParam String age,
+                           @RequestParam String email, @RequestParam String password,
+                           @RequestParam(required = false) List<String> roleList) {
+        User user = userService.findUserById(id);
+        user.setName(firstName);
+        user.setLastName(lastName);
+        user.setAge(Byte.parseByte(age));
+        user.setEmail(email);
+        user.setPassword(password);
+        if (roleList != null) {
+            user.setRoles(new HashSet<>());
+            for (String s : roleList) {
+                user.getRoles().add(roleService.findRoleByName(s));
+            }
         }
-        else if (!user.getPassword().equals(user.getConfirmPassword())) {
-            model.addAttribute("user", user);
-            model.addAttribute("roles", roleService.getRoles());
-            model.addAttribute("passwordError", "Пароли не совпадают");
-            return "new";
-        }
-        if (userService.getUserByUsername(user.getUsername()) != null) {
-            model.addAttribute("user", user);
-            model.addAttribute("roles", roleService.getRoles());
-            model.addAttribute("usernameError", "Пользователь с таким именем уже существует");
-            return "new";
-        }
-        else {
-            userService.saveUser(user);
-            return "redirect:/admin";
-        }
-    }
-
-    @GetMapping("/editUser/{id}")
-    public String editUser(@PathVariable("id") long id, Model model) {
-        User user = userService.getUserById(id);
-        model.addAttribute("user", user);
-        model.addAttribute("roles", roleService.getRoles());
-        return "edit";
-    }
-
-    @PatchMapping("/{id}")
-    public String updateUser(@ModelAttribute("user") User user, @PathVariable("id") long id) {
-        userService.updateUser(id, user);
+        userService.editUser(user);
         return "redirect:/admin";
     }
 
-    @DeleteMapping("/deleteUser/{id}")
-    public String deleteUser(@PathVariable("id") long id) {
-        userService.deleteUserById(id);
+    @PostMapping(value = "/add")
+    public String addUser(@RequestParam String firstName, @RequestParam String lastName, @RequestParam byte age,
+                          @RequestParam String email, @RequestParam String password, @RequestParam List<String> roleList) {
+        UserDTO user = new UserDTO(firstName, lastName, age, email, password, roleList);
+        userService.saveUser(user);
         return "redirect:/admin";
+    }
+
+    @PostMapping(value = "/delete")
+    public String deleteUser(@RequestParam Long id) {
+        userService.deleteUser(id);
+        return "redirect:/admin";
+    }
+    @GetMapping(value = "/user-admin")
+    public String user(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.getByUserName(authentication.getName());
+        model.addAttribute("user", user);
+        return "admin/user-admin";
     }
 }

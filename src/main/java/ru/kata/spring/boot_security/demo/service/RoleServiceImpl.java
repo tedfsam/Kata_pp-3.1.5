@@ -6,24 +6,25 @@ import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class RoleServiceImpl implements RoleService{
 
     private final RoleRepository roleRepository;
 
-    @Autowired
     public RoleServiceImpl(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
     }
 
     @Override
-    public List<Role> getRoles() {
-        return roleRepository.findAll();
+    public Set<Role> getRoles() {
+        return roleRepository.findAll().stream().collect(Collectors.toSet());
     }
 
     @Override
-    public void addRole(Role role) {
-        roleRepository.save(role);
+    public Role findRoleByName(String role) {
+        return roleRepository.findByRole(role);
     }
 }

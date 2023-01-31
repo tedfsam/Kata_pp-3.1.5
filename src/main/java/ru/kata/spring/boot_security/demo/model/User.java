@@ -9,59 +9,43 @@ import java.util.Collection;
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 public class User implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
-    @NotEmpty(message = "Not null")
-    @Size(min = 2, max = 255, message = "From 2 to 25 symbols")
-    @Column(name = "username")
-    private String username;
-
-    @Column(name = "password")
-    @Size(min = 2, message = "Above 2 symbols")
-    private String password;
-
-    @Transient
-    private String confirmPassword;
-
-    @Column(name = "firstname")
-    private String firstName;
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "lastname")
     private String lastName;
 
     @Column(name = "age")
-    @Min(value = 0, message = "Above zero")
-    @Max(value = 127, message = "Check age")
-    private Integer age;
+    private int age;
 
-    @Email(message = "Email format")
     @Column(name = "email")
     private String email;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "roles_id"))
+    @Column(name = "password")
+    private String password;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
     public User() {
     }
 
-    public User(String username, String password, String firstName,
-                String lastName, int age, String email, Set<Role> roles) {
-        this.username = username;
-        this.password = password;
-
-        this.firstName = firstName;
+    public User(Long id, String name, String lastName, int age, String email, String password) {
+        this.id = id;
+        this.name = name;
         this.lastName = lastName;
         this.age = age;
         this.email = email;
-        this.roles = roles;
+        this.password = password;
     }
 
     public Long getId() {
@@ -72,12 +56,12 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getLastName() {
@@ -88,14 +72,6 @@ public class User implements UserDetails {
         this.lastName = lastName;
     }
 
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -104,8 +80,39 @@ public class User implements UserDetails {
         this.email = email;
     }
 
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public String getRolesString() {
+        return roles.size() == 2 ? "ADMIN USER" : "USER";
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public int getAge() {return age;}
+
+    public void setAge(int age) {this.age = age;}
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles;
+    }
+
+    @Override
     public String getUsername() {
-        return username;
+        return name;
     }
 
     @Override
@@ -126,38 +133,5 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getRoles();
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
-
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
     }
 }
