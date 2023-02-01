@@ -5,17 +5,11 @@ import java.util.List;
 public class UserDTO {
 
     private Long id;
-
     private String name;
-
     private String lastName;
-
     private int age;
-
     private String email;
-
     private String password;
-
     private List<String> roles;
 
     public UserDTO() {
