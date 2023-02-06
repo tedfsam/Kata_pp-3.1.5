@@ -29,19 +29,30 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.formLogin().loginPage("/login").successHandler(new SuccessUserHandler())
+        http.formLogin().loginPage("/login")
+                .successHandler(new SuccessUserHandler())
                 .loginProcessingUrl("/login")
                 .usernameParameter("username")
-                .passwordParameter("password").permitAll();
+                .passwordParameter("password")
+                .permitAll();
 
-        http.logout().permitAll().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/login?logout").and().csrf().disable();
+        http.logout()
+                .permitAll()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl("/login?logout")
+                .and()
+                .csrf()
+                .disable();
 
         http.authorizeRequests()
-                .antMatchers("/").authenticated()
-                .antMatchers("/login", "/registration").anonymous()
-                .antMatchers("/user").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/admin/**").hasRole("ADMIN");
+                .antMatchers("/")
+                .authenticated()
+                .antMatchers("/login", "/registration")
+                .anonymous()
+                .antMatchers("/user")
+                .hasAnyRole("USER", "ADMIN")
+                .antMatchers("/admin/**")
+                .hasRole("ADMIN");
     }
 
     @Autowired
