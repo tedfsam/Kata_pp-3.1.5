@@ -70,7 +70,6 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         User newUser = userRepository.save(user);
         return getDtoFromUser(newUser);
-
     }
 
     public void editUser(User user) {

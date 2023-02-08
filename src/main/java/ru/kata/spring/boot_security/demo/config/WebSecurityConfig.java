@@ -15,13 +15,8 @@ import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    final UserServiceImpl userService;
-
     @Autowired
-    public WebSecurityConfig(UserServiceImpl userService) {
-        this.userService = userService;
-    }
-
+    UserServiceImpl userService;
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
@@ -29,7 +24,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.formLogin().loginPage("/login")
+        http.formLogin()
+                .loginPage("/login")
                 .successHandler(new SuccessUserHandler())
                 .loginProcessingUrl("/login")
                 .usernameParameter("username")
